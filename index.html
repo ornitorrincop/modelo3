@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Sonic Interactivo con Mundo Decorado</title>
+    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+  </head>
+  <body>
+    <a-scene>
+      <!-- Entidad del jugador (Sonic + cámara) -->
+      <a-entity id="player" position="0 0 0" movement-controls>
+        
+        <!-- Sonic -->
+        <a-entity id="sonic"
+          gltf-model url=(modelo3d/sonic64.glb)
+          position="0 0 0"
+          scale="0.5 0.5 0.5"
+          rotation="0 180 0">
+        </a-entity>
+
+        <!-- Cámara en tercera persona -->
+        <a-entity 
+          position="0 3 6"
+          rotation="-10 180 0">
+          <a-camera></a-camera>
+        </a-entity>
+      </a-entity>
+
+      <!-- Luces -->
+      <a-entity light="type: ambient; intensity: 0.8; color: #fff"></a-entity>
+      <a-entity light="type: directional; intensity: 0.6; color: #fff" position="1 3 2"></a-entity>
+
+      <!-- Suelo -->
+      <a-plane rotation="-90 0 0" width="60" height="60" color="#4CAF50"></a-plane>
+
+      <!-- Cielo más bonito -->
+      <a-sky color="#87CEEB"></a-sky>
+
+      <!-- Árboles -->
+      <a-cylinder position="-5 1 -5" radius="0.5" height="2" color="#8B4513"></a-cylinder>
+      <a-sphere position="-5 3 -5" radius="2" color="#228B22"></a-sphere>
+
+      <a-cylinder position="8 1 -10" radius="0.5" height="2" color="#8B4513"></a-cylinder>
+      <a-sphere position="8 3 -10" radius="2" color="#228B22"></a-sphere>
+
+      <a-cylinder position="-12 1 4" radius="0.5" height="2" color="#8B4513"></a-cylinder>
+      <a-sphere position="-12 3 4" radius="2" color="#228B22"></a-sphere>
+
+      <!-- Obstáculos (cubos) -->
+      <a-box position="3 0.5 -6" depth="1" height="1" width="1" color="#FF5722"></a-box>
+      <a-box position="-4 0.5 -8" depth="1.5" height="1.5" width="1.5" color="#3F51B5"></a-box>
+      <a-box position="7 0.5 -3" depth="1" height="2" width="1" color="#FFC107"></a-box>
+
+      <!-- Anillos (esferas doradas) -->
+      <a-ring position="0 1 -10" radius-inner="0.3" radius-outer="0.5" color="gold" rotation="0 0 90"></a-ring>
+      <a-ring position="2 1 -12" radius-inner="0.3" radius-outer="0.5" color="gold" rotation="0 0 90"></a-ring>
+      <a-ring position="-2 1 -14" radius-inner="0.3" radius-outer="0.5" color="gold" rotation="0 0 90"></a-ring>
+    </a-scene>
+
+    <!-- Controles de movimiento -->
+    <script>
+      // Componente simple para mover al jugador con teclas
+      AFRAME.registerComponent('movement-controls', {
+        schema: {speed: {type: 'number', default: 0.1}},
+        init: function () {
+          this.keys = {};
+          window.addEventListener('keydown', e => this.keys[e.code] = true);
+          window.addEventListener('keyup', e => this.keys[e.code] = false);
+        },
+        tick: function () {
+          const el = this.el;
+          const pos = el.getAttribute('position');
+          const speed = this.data.speed;
+
+          if (this.keys['KeyW']) pos.z -= speed;
+          if (this.keys['KeyS']) pos.z += speed;
+          if (this.keys['KeyA']) pos.x -= speed;
+          if (this.keys['KeyD']) pos.x += speed;
+
+          el.setAttribute('position', pos);
+        }
+      });
+    </script>
+  </body>
+</html>
